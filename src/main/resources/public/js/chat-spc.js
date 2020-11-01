@@ -1,30 +1,44 @@
 
-document.getElementById("disconnect-btn-spc").onclick = function () {
+function disconnectSpc() {
     if(connectedUser) {
-        disconnect();
+        document.getElementById('connect-btn-spc').disabled = false;
+        document.getElementById('connect-btn').disabled = false;
+        document.getElementById('disconnect-btn-spc').disabled = true;
+        document.getElementById('send-btn-spc').disabled = true;
+
+        disconnectUser();
     }
 };
 
-document.getElementById("connect-btn-spc").onclick = function () {
+function connectSpc() {
     var name = document.getElementById("name-spc").value;
-    if(name === undefined) {
+    if(name === undefined || name === "") {
         alert("put name");
         return;
     }
+
+    document.getElementById('connect-btn-spc').disabled = true;
+    document.getElementById('connect-btn').disabled = true;
+    document.getElementById('disconnect-btn-spc').disabled = false;
+    document.getElementById('send-btn-spc').disabled = false;
+
     if(!connectedUser) {
-        connect(name);
+        connectUser(name);
     }
 };
 
-document.getElementById("send-btn-spc").onclick = function () {
+function sendSpc() {
+    if(!connectedUser) {
+        return;
+    }
     var name = document.getElementById("name-spc").value;
-    sendMessage(name);
+    sendMessageSpc(name);
 };
 
 var stompClient;
 var connectedUser = false;
 
-function connect(name) {
+function connectUser(name) {
     var socket = new SockJS('/chat');
     stompClient = Stomp.over(socket);
 
@@ -35,12 +49,12 @@ function connect(name) {
 
         console.log('Connected: ' + frame);
         stompClient.subscribe(url, function(messageOutput) {
-            showMessageOutput(messageOutput.body);
+            showMessageOutputSpc(messageOutput.body);
         });
     });
 }
 
-function disconnect() {
+function disconnectUser() {
     if(stompClient != null) {
         stompClient.disconnect();
     }
@@ -48,13 +62,19 @@ function disconnect() {
     console.log("Disconnected");
 }
 
-function sendMessage(name) {
+function sendMessageSpc(name) {
+    if (!connectedUser) {
+        return;
+    }
     var url = '/app/chat/spc';
     stompClient.send(url, {},
       JSON.stringify({'from':name, 'text':'Greetings'}));
 }
 
-function showMessageOutput(messageOutput) {
+function showMessageOutputSpc(messageOutput) {
+    if (!messageOutput) {
+        return;
+    }
     document.getElementById("log-area-spc").append(messageOutput + "\n");
 
 }

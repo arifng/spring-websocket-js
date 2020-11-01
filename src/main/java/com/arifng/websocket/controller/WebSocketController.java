@@ -22,8 +22,8 @@ public class WebSocketController {
 
     @MessageMapping("/chat/spc")
     public void sendMessageToSpecificUser(@Payload Message message) {
-        System.out.println(message.getFrom());
+        //System.out.println(message.getFrom());
         simpMessagingTemplate.convertAndSendToUser(message.getFrom(),
-                "/reply", "Test message");
+                "/reply", "Test message reply to " + message.getFrom());
     }
 }

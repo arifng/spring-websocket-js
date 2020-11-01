@@ -6,13 +6,13 @@
     <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
     <script src="js/stomp.min.js"></script>
 </head>
-<body>
+<body onload="disconnect()">
     <div><h1>Chat testing page</h1></div>
     <div>
-        <div><h2>For common user</h2></div>
-        <button id="connect-btn" >Connect: </button>
-        <button id="disconnect-btn" >Disconnect: </button>
-        <button id="send-btn" >Send: </button>
+        <div><h2>For anonymous user</h2></div>
+        <button id="connect-btn" onclick="connect()">Connect: </button>
+        <button id="disconnect-btn" disabled="disabled" onclick="disconnect()">Disconnect: </button>
+        <button id="send-btn" disabled="disabled" onclick="send()">Send Anonymously </button>
         <br/>
         <div id="log-area"></div>
     </div>
@@ -23,10 +23,11 @@
     <br/>
     <div>
         <div><h2>For specific user</h2></div>
-        <button id="connect-btn-spc" >Connect: </button>
-        <button id="disconnect-btn-spc" >Disconnect: </button>
-        <button id="send-btn-spc" >Send: </button>
-        <input name="name-spc" id="name-spc">
+        <button id="connect-btn-spc" onclick="connectSpc()">Connect To: </button>
+        <input name="name-spc" id="name-spc" placeholder="User name required">
+        <button id="disconnect-btn-spc" disabled="disabled" onclick="disconnectSpc()">Disconnect: </button>
+        <button id="send-btn-spc" disabled="disabled" onclick="sendSpc()">Send: </button>
+
     </div>
     <div id="log-area-spc"></div>
 

@@ -1,24 +1,33 @@
 
-document.getElementById("connect-btn").onclick = function () {
+function connect() {
     if(!connected) {
-        connect();
+        document.getElementById('connect-btn-spc').disabled = true;
+        document.getElementById('connect-btn').disabled = true;
+        document.getElementById('disconnect-btn').disabled = false;
+        document.getElementById('send-btn').disabled = false;
+
+        doConnect();
     }
 };
 
-document.getElementById("disconnect-btn").onclick = function () {
+function disconnect() {
     if(connected) {
-        disconnect();
+        document.getElementById('connect-btn-spc').disabled = false;
+        document.getElementById('connect-btn').disabled = false;
+        document.getElementById('disconnect-btn').disabled = true;
+        document.getElementById('send-btn').disabled = true;
+        doDisconnect();
     }
 };
 
-document.getElementById("send-btn").onclick = function () {
+function send() {
     sendMessage();
 };
 
 var stompClient;
 var connected = false;
 
-function connect(name) {
+function doConnect(name) {
     var socket = new SockJS('/chat');
     stompClient = Stomp.over(socket);
 
@@ -32,7 +41,7 @@ function connect(name) {
     });
 }
 
-function disconnect() {
+function doDisconnect() {
     if(stompClient != null) {
         stompClient.disconnect();
     }
@@ -41,6 +50,9 @@ function disconnect() {
 }
 
 function sendMessage(name) {
+    if (!connected) {
+        return;
+    }
     var url = '/app/chat';
     var user = 'CommonUser';
     stompClient.send(url, {},
@@ -48,5 +60,8 @@ function sendMessage(name) {
 }
 
 function showMessageOutput(messageOutput) {
+    if (!messageOutput) {
+        return;
+    }
     document.getElementById("log-area").append(messageOutput + "\n");
 }
